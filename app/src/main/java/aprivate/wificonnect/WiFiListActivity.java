@@ -127,7 +127,7 @@ public class WiFiListActivity extends AppCompatActivity {
                 Pass = edit.getText().toString();
 
                 QRBuilderParser builderParser = new QRBuilderParser();
-                String QR_string = builderParser.buildQR(SSID.substring(1, SSID.length() - 1), Pass);
+                String QR_string = builderParser.buildQR(SSID, Pass);
 
                 try {
                     showQR(encodeAsBitmap(QR_string));
@@ -160,7 +160,7 @@ public class WiFiListActivity extends AppCompatActivity {
                 list.add(values[i]);
             }
             for (int i = 0; i < configs.size(); i++) {
-                list.add(configs.get(i).SSID);
+                list.add(configs.get(i).SSID.substring(1, configs.get(i).SSID.length() - 1));
             }
             final StableArrayAdapter adapter = new StableArrayAdapter(this,
                     android.R.layout.simple_list_item_1, list);
