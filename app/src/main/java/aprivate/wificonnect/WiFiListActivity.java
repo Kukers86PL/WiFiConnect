@@ -174,7 +174,7 @@ public class WiFiListActivity extends AppCompatActivity {
                         final String item = (String) parent.getItemAtPosition(position);
 
                         for (int i = 0; i < configs.size(); i++) {
-                            if (configs.get(i).SSID == item) {
+                            if (configs.get(i).SSID == ("\"" + item + "\"")) {
                                 SSID = item;
                                 getPass();
                                 break;
