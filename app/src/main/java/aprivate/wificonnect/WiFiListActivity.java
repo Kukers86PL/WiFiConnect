@@ -15,8 +15,11 @@ import android.widget.ListView;
 import android.widget.ArrayAdapter;
 import java.util.HashMap;
 import android.widget.AdapterView;
+import aprivate.wificonnect.QRBuilderParser;
 
 public class WiFiListActivity extends AppCompatActivity {
+
+    private List<WifiConfiguration> configs;
 
     private class StableArrayAdapter extends ArrayAdapter<String> {
 
@@ -50,7 +53,7 @@ public class WiFiListActivity extends AppCompatActivity {
 
         Context context = getApplicationContext();
         WifiManager wifi = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
-        List<WifiConfiguration> configs = wifi.getConfiguredNetworks();
+        configs = wifi.getConfiguredNetworks();
 
         if (configs != null) {
 
@@ -72,7 +75,24 @@ public class WiFiListActivity extends AppCompatActivity {
                 @Override
                 public void onItemClick(AdapterView<?> parent, final View view,
                                         int position, long id) {
-                    final String item = (String) parent.getItemAtPosition(position);
+                    if (configs != null) {
+                        final String item = (String) parent.getItemAtPosition(position);
+
+                        int found = -1;
+                        for (int i = 0; i < configs.size(); i++) {
+                            if (configs.get(i).SSID == item) {
+                                found = i;
+                                break;
+                            }
+                        }
+
+                        if (found != -1) {
+                            QRBuilderParser builderParser = new QRBuilderParser();
+                            String QR_string = builderParser.buildQR(configs.get(found).SSID, "test");
+                            String SSID = builderParser.parseSSID(QR_string);
+                            String Pass = builderParser.parsePass(QR_string);
+                        }
+                    }
                 }
             });
         }
