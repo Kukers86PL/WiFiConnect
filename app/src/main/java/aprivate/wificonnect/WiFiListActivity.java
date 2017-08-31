@@ -22,12 +22,49 @@ import android.widget.EditText;
 import android.text.InputType;
 import android.text.method.PasswordTransformationMethod;
 import android.content.DialogInterface;
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.MultiFormatWriter;
+import com.google.zxing.WriterException;
+import com.google.zxing.common.BitMatrix;
+import android.graphics.Bitmap;
+import android.widget.ImageView;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.LayoutInflater;
 
 public class WiFiListActivity extends AppCompatActivity {
 
     private List<WifiConfiguration> configs;
     private String SSID = "";
     private String Pass = "";
+
+    public final static int WHITE = 0xFFFFFFFF;
+    public final static int BLACK = 0xFF000000;
+    public final static int WIDTH = 400;
+    public final static int HEIGHT = 400;
+
+    private Bitmap encodeAsBitmap(String str) throws WriterException {
+        BitMatrix result;
+        try {
+            result = new MultiFormatWriter().encode(str,
+                    BarcodeFormat.QR_CODE, WIDTH, WIDTH, null);
+        } catch (IllegalArgumentException iae) {
+            // Unsupported format
+            return null;
+        }
+        int w = result.getWidth();
+        int h = result.getHeight();
+        int[] pixels = new int[w * h];
+        for (int y = 0; y < h; y++) {
+            int offset = y * w;
+            for (int x = 0; x < w; x++) {
+                pixels[offset + x] = result.get(x, y) ? BLACK : WHITE;
+            }
+        }
+        Bitmap bitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
+        bitmap.setPixels(pixels, 0, w, 0, 0, w, h);
+        return bitmap;
+    }
 
     private class StableArrayAdapter extends ArrayAdapter<String> {
 
@@ -54,6 +91,24 @@ public class WiFiListActivity extends AppCompatActivity {
 
     }
 
+    private void showQR(Bitmap QR)
+    {
+        final AlertDialog.Builder alert = new AlertDialog.Builder(this);
+        final ImageView input = new ImageView(this);
+
+        input.setImageBitmap(QR);
+
+        alert.setView(input);
+        alert.setTitle("QR Code");
+        alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+        alert.show();
+    }
+
     private void getPass()
     {
         final AlertDialog.Builder alert = new AlertDialog.Builder(this);
@@ -68,15 +123,19 @@ public class WiFiListActivity extends AppCompatActivity {
         alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                    EditText edit = (EditText) ((AlertDialog) dialog).findViewById(R.id.dialog_edit_text);
-                    Pass = edit.getText().toString();
+                EditText edit = (EditText) ((AlertDialog) dialog).findViewById(R.id.dialog_edit_text);
+                Pass = edit.getText().toString();
 
-                    QRBuilderParser builderParser = new QRBuilderParser();
-                    String QR_string = builderParser.buildQR(SSID, Pass);
-                    String SSID = builderParser.parseSSID(QR_string);
-                    String Pass = builderParser.parsePass(QR_string);
+                QRBuilderParser builderParser = new QRBuilderParser();
+                String QR_string = builderParser.buildQR(SSID, Pass);
 
-                    dialog.cancel();
+                try {
+                    showQR(encodeAsBitmap(QR_string));
+                } catch (WriterException e) {
+                    e.printStackTrace();
+                }
+
+                dialog.cancel();
                 }
             });
         alert.show();
