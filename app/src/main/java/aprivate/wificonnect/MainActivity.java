@@ -17,7 +17,7 @@ public class MainActivity extends AppCompatActivity {
     public void onClickBtnGenerate(View v)
     {
         Button generate_button = (Button)findViewById(R.id.buttonGenerate);
-        generate_button.setText("Generate QR Clicked");
+        setContentView(R.layout.wifi_list);
     }
 
     public void onClickBtnScan(View v)
