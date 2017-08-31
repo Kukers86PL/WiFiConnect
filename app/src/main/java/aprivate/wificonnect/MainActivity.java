@@ -1,5 +1,8 @@
 package aprivate.wificonnect;
 
+import android.content.Context;
+import android.net.wifi.WifiConfiguration;
+import android.net.wifi.WifiManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -37,6 +40,17 @@ public class MainActivity extends AppCompatActivity {
         new IntentIntegrator(this).initiateScan();
     }
 
+    private void wifiConnect(String SSID, String Pass) {
+        WifiManager wifi = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+        WifiConfiguration config = new WifiConfiguration();
+        config.SSID = "\"" + SSID + "\"";
+        config.preSharedKey = "\"" + Pass + "\"";
+        int netId = wifi.addNetwork(config);
+        wifi.disconnect();
+        wifi.enableNetwork(netId, true);
+        wifi.reconnect();
+    }
+
     // Get the results:
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data){
@@ -46,6 +60,7 @@ public class MainActivity extends AppCompatActivity {
             QRBuilderParser builderParses = new QRBuilderParser();
             String SSID = builderParses.parseSSID(QR_text);
             String Pass = builderParses.parsePass(QR_text);
+            wifiConnect(SSID, Pass);
         } else {
             super.onActivityResult(requestCode, resultCode, data);
         }
