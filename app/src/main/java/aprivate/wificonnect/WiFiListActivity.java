@@ -127,7 +127,7 @@ public class WiFiListActivity extends AppCompatActivity {
                 Pass = edit.getText().toString();
 
                 QRBuilderParser builderParser = new QRBuilderParser();
-                String QR_string = builderParser.buildQR(SSID, Pass);
+                String QR_string = builderParser.buildQR(SSID.substring(1, SSID.length() - 1), Pass);
 
                 try {
                     showQR(encodeAsBitmap(QR_string));
