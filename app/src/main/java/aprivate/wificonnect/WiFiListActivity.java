@@ -40,14 +40,14 @@ public class WiFiListActivity extends AppCompatActivity {
 
     public final static int WHITE = 0xFFFFFFFF;
     public final static int BLACK = 0xFF000000;
-    public final static int WIDTH = 400;
-    public final static int HEIGHT = 400;
+    public final static int WIDTH = 800;
+    public final static int HEIGHT = 800;
 
     private Bitmap encodeAsBitmap(String str) throws WriterException {
         BitMatrix result;
         try {
             result = new MultiFormatWriter().encode(str,
-                    BarcodeFormat.QR_CODE, WIDTH, WIDTH, null);
+                    BarcodeFormat.QR_CODE, WIDTH, HEIGHT, null);
         } catch (IllegalArgumentException iae) {
             // Unsupported format
             return null;
