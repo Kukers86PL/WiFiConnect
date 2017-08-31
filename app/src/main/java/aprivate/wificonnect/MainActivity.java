@@ -8,18 +8,21 @@ import android.widget.Button;
 
 public class MainActivity extends AppCompatActivity {
 
-    boolean dupa = true;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
     }
 
-    public void onClickBtnDupa(View v)
+    public void onClickBtnGenerate(View v)
     {
-        Button dupa_button = (Button)findViewById(R.id.button);
-        if (dupa) dupa_button.setText("DUPA! DUPA!"); else dupa_button.setText("NIE DUPA?!");
-        dupa = !dupa;
+        Button generate_button = (Button)findViewById(R.id.buttonGenerate);
+        generate_button.setText("Generate QR Clicked");
+    }
+
+    public void onClickBtnScan(View v)
+    {
+        Button scan_button = (Button)findViewById(R.id.buttonScan);
+        scan_button.setText("Scan QR Clicked");
     }
 }
