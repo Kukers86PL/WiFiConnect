@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.content.Intent;
+
 
 public class MainActivity extends AppCompatActivity {
 
@@ -16,8 +18,8 @@ public class MainActivity extends AppCompatActivity {
 
     public void onClickBtnGenerate(View v)
     {
-        Button generate_button = (Button)findViewById(R.id.buttonGenerate);
-        setContentView(R.layout.wifi_list);
+        Intent intent = new Intent(this, WiFiListActivity.class);
+        startActivity(intent);
     }
 
     public void onClickBtnScan(View v)
