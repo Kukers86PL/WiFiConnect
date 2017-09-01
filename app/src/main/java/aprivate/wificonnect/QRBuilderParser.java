@@ -19,7 +19,9 @@ public class QRBuilderParser {
             if (init.equals(init_string)) {
                 if (QR.length() > init_string.length()) {
                     int index = QR.indexOf("*", init_string.length());
-                    return QR.substring(init_string.length(), index);
+                    if (index != -1) {
+                        return QR.substring(init_string.length(), index);
+                    }
                 }
             }
         }
@@ -33,9 +35,11 @@ public class QRBuilderParser {
             if (init.equals(init_string)) {
                 if (QR.length() > init_string.length()) {
                     int index1 = QR.indexOf("*", init_string.length());
-                    if ((QR.length() - index1) > 0) {
+                    if ((index1 != -1) && (QR.length() - index1) > 0) {
                         int index2 = QR.indexOf("*", index1 + 1);
-                        return QR.substring(index1 + 1, index2);
+                        if (index2 != -1) {
+                            return QR.substring(index1 + 1, index2);
+                        }
                     }
                 }
             }
