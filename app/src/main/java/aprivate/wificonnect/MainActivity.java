@@ -41,14 +41,16 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void wifiConnect(String SSID, String Pass) {
-        WifiManager wifi = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
-        WifiConfiguration config = new WifiConfiguration();
-        config.SSID = "\"" + SSID + "\"";
-        config.preSharedKey = "\"" + Pass + "\"";
-        int netId = wifi.addNetwork(config);
-        wifi.disconnect();
-        wifi.enableNetwork(netId, true);
-        wifi.reconnect();
+        if (!SSID.isEmpty()) {
+            WifiManager wifi = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+            WifiConfiguration config = new WifiConfiguration();
+            config.SSID = "\"" + SSID + "\"";
+            config.preSharedKey = "\"" + Pass + "\"";
+            int netId = wifi.addNetwork(config);
+            wifi.disconnect();
+            wifi.enableNetwork(netId, true);
+            wifi.reconnect();
+        }
     }
 
     // Get the results:
