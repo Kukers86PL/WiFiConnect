@@ -43,6 +43,10 @@ public class WiFiListActivity extends AppCompatActivity {
     public final static int WIDTH = 800;
     public final static int HEIGHT = 800;
 
+    private String removeFirstAndLastChar(String text) {
+        return text.substring(1, text.length() - 1);
+    }
+
     private Bitmap encodeAsBitmap(String str) throws WriterException {
         BitMatrix result;
         try {
@@ -127,7 +131,7 @@ public class WiFiListActivity extends AppCompatActivity {
                 Pass = edit.getText().toString();
 
                 QRBuilderParser builderParser = new QRBuilderParser();
-                String QR_string = builderParser.buildQR(SSID.substring(1, SSID.length() - 1), Pass);
+                String QR_string = builderParser.buildQR(SSID, Pass);
 
                 try {
                     showQR(encodeAsBitmap(QR_string));
@@ -153,14 +157,14 @@ public class WiFiListActivity extends AppCompatActivity {
         if (configs != null) {
 
             final ListView listview = (ListView) findViewById(R.id.wifi_list);
-            String[] values = new String[]{"Known WiFi's"};
+            String[] values = new String[]{"Known WiFi's:"};
 
             final ArrayList<String> list = new ArrayList<String>();
             for (int i = 0; i < values.length; ++i) {
                 list.add(values[i]);
             }
             for (int i = 0; i < configs.size(); i++) {
-                list.add(configs.get(i).SSID);
+                list.add(removeFirstAndLastChar(configs.get(i).SSID));
             }
             final StableArrayAdapter adapter = new StableArrayAdapter(this,
                     android.R.layout.simple_list_item_1, list);
@@ -170,17 +174,8 @@ public class WiFiListActivity extends AppCompatActivity {
                 @Override
                 public void onItemClick(AdapterView<?> parent, final View view,
                                         int position, long id) {
-                    if (configs != null) {
-                        final String item = (String) parent.getItemAtPosition(position);
-
-                        for (int i = 0; i < configs.size(); i++) {
-                            if (configs.get(i).SSID == item) {
-                                SSID = item;
-                                getPass();
-                                break;
-                            }
-                        }
-                    }
+                    SSID = (String) parent.getItemAtPosition(position);
+                    getPass();
                 }
             });
         }

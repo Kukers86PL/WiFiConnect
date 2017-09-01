@@ -14,23 +14,31 @@ public class QRBuilderParser {
     }
 
     public String parseSSID(String QR) {
-        String init = QR.substring(0, init_string.length());
-        if (init.equals(init_string))
-        {
-            int index = QR.indexOf("*", init_string.length());
-            return QR.substring(init_string.length(), index);
+        if (QR.length() >= init_string.length()) {
+            String init = QR.substring(0, init_string.length());
+            if (init.equals(init_string)) {
+                if (QR.length() > init_string.length()) {
+                    int index = QR.indexOf("*", init_string.length());
+                    return QR.substring(init_string.length(), index);
+                }
+            }
         }
 
         return "";
     }
 
     public String parsePass(String QR) {
-        String init = QR.substring(0, init_string.length());
-        if (init.equals(init_string))
-        {
-            int index1 = QR.indexOf("*", init_string.length());
-            int index2 = QR.indexOf("*", index1 + 1);
-            return QR.substring(index1 + 1, index2);
+        if (QR.length() >= init_string.length()) {
+            String init = QR.substring(0, init_string.length());
+            if (init.equals(init_string)) {
+                if (QR.length() > init_string.length()) {
+                    int index1 = QR.indexOf("*", init_string.length());
+                    if ((QR.length() - index1) > 0) {
+                        int index2 = QR.indexOf("*", index1 + 1);
+                        return QR.substring(index1 + 1, index2);
+                    }
+                }
+            }
         }
 
         return "";
