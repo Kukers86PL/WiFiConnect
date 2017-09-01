@@ -31,6 +31,11 @@ import android.widget.ImageView;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.LayoutInflater;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import android.widget.TextView;
 
 public class WiFiListActivity extends AppCompatActivity {
 
@@ -42,6 +47,76 @@ public class WiFiListActivity extends AppCompatActivity {
     public final static int BLACK = 0xFF000000;
     public final static int WIDTH = 800;
     public final static int HEIGHT = 800;
+
+    static final int READ_BLOCK_SIZE = 100;
+    static final String CACHE_FILE_NAME = "cache.dat";
+    static final String LIST_TITLE = "Known WiFi's";
+
+    private void writeToCache(String toWrite) {
+        try {
+            FileOutputStream fileout=openFileOutput(CACHE_FILE_NAME, MODE_PRIVATE);
+            OutputStreamWriter outputWriter=new OutputStreamWriter(fileout);
+            outputWriter.write(toWrite);
+            outputWriter.close();
+
+        } catch (Exception e) {
+            // nothing to do
+        }
+    }
+
+    private String readFromCache() {
+        try {
+            FileInputStream fileIn=openFileInput(CACHE_FILE_NAME);
+            InputStreamReader InputRead= new InputStreamReader(fileIn);
+
+            char[] inputBuffer= new char[READ_BLOCK_SIZE];
+            String fromRead="";
+            int charRead;
+
+            while ((charRead=InputRead.read(inputBuffer))>0) {
+                // char to string conversion
+                String readstring=String.copyValueOf(inputBuffer,0,charRead);
+                fromRead +=readstring;
+            }
+            InputRead.close();
+
+            return fromRead;
+
+        } catch (Exception e) {
+            return "";
+        }
+    }
+
+    private void saveToCache(String SSID, String Pass) {
+        String fromRead = readFromCache();
+        String toWrite = "";
+        String lookForSSID = "*" + SSID + "*";
+        int index1 = fromRead.indexOf(lookForSSID);
+        if (index1 == -1) {
+            toWrite = fromRead + "*" + SSID + "*" + Pass + "*";
+        } else {
+            if ((fromRead.length() - index1) > 0) {
+                int index2 = fromRead.indexOf("*", (index1 + lookForSSID.length()));
+                if (index2 != -1) {
+                    toWrite = fromRead.substring(0, index1) + "*" + SSID + "*" + Pass + "*" + fromRead.substring(index2, fromRead.length());
+                }
+            }
+        }
+        writeToCache(toWrite);
+    }
+
+    private String getPassFromCache(String SSID) {
+        String fromRead = readFromCache();
+        String lookForSSID = "*" + SSID + "*";
+        int index1 = fromRead.indexOf(lookForSSID);
+        if ((index1 != -1) && ((fromRead.length() - index1 + lookForSSID.length()) > 0)) {
+            int index2 = fromRead.indexOf("*", index1 + lookForSSID.length());
+            if (index2 != -1) {
+                return fromRead.substring((index1 + lookForSSID.length()), index2);
+            }
+        }
+        return "";
+    }
 
     private String removeFirstAndLastChar(String text) {
         return text.substring(1, text.length() - 1);
@@ -118,9 +193,10 @@ public class WiFiListActivity extends AppCompatActivity {
         final AlertDialog.Builder alert = new AlertDialog.Builder(this);
         final EditText input = new EditText(this);
 
-        input.setInputType(InputType.TYPE_CLASS_TEXT| InputType.TYPE_TEXT_VARIATION_PASSWORD);
+        input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
         input.setTransformationMethod(PasswordTransformationMethod.getInstance());
         input.setId(R.id.dialog_edit_text);
+        input.setText(getPassFromCache(SSID), TextView.BufferType.EDITABLE);
 
         alert.setView(input);
         alert.setTitle("Password Required");
@@ -129,6 +205,8 @@ public class WiFiListActivity extends AppCompatActivity {
             public void onClick(DialogInterface dialog, int which) {
                 EditText edit = (EditText) ((AlertDialog) dialog).findViewById(R.id.dialog_edit_text);
                 Pass = edit.getText().toString();
+
+                saveToCache(SSID, Pass);
 
                 QRBuilderParser builderParser = new QRBuilderParser();
                 String QR_string = builderParser.buildQR(SSID, Pass);
@@ -157,7 +235,7 @@ public class WiFiListActivity extends AppCompatActivity {
         if (configs != null) {
 
             final ListView listview = (ListView) findViewById(R.id.wifi_list);
-            String[] values = new String[]{"Known WiFi's:"};
+            String[] values = new String[]{LIST_TITLE};
 
             final ArrayList<String> list = new ArrayList<String>();
             for (int i = 0; i < values.length; ++i) {
@@ -175,7 +253,9 @@ public class WiFiListActivity extends AppCompatActivity {
                 public void onItemClick(AdapterView<?> parent, final View view,
                                         int position, long id) {
                     SSID = (String) parent.getItemAtPosition(position);
-                    getPass();
+                    if (!SSID.equals(LIST_TITLE)) {
+                        getPass();
+                    }
                 }
             });
         }
