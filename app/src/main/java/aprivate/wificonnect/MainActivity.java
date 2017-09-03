@@ -20,6 +20,8 @@ import aprivate.wificonnect.QRBuilderParser;
 import android.content.Intent;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
+import aprivate.wificonnect.Cache;
+import aprivate.wificonnect.WiFi;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -40,19 +42,6 @@ public class MainActivity extends AppCompatActivity {
         new IntentIntegrator(this).initiateScan();
     }
 
-    private void wifiConnect(String SSID, String Pass) {
-        if (!SSID.isEmpty()) {
-            WifiManager wifi = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
-            WifiConfiguration config = new WifiConfiguration();
-            config.SSID = "\"" + SSID + "\"";
-            config.preSharedKey = "\"" + Pass + "\"";
-            int netId = wifi.addNetwork(config);
-            wifi.disconnect();
-            wifi.enableNetwork(netId, true);
-            wifi.reconnect();
-        }
-    }
-
     // Get the results:
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data){
@@ -62,7 +51,10 @@ public class MainActivity extends AppCompatActivity {
             QRBuilderParser builderParses = new QRBuilderParser();
             String SSID = builderParses.parseSSID(QR_text);
             String Pass = builderParses.parsePass(QR_text);
-            wifiConnect(SSID, Pass);
+            if (!SSID.isEmpty()) {
+                Cache.saveToCache(getApplicationContext(), SSID, Pass);
+                WiFi.connect(getApplicationContext(), SSID, Pass);
+            }
         } else {
             super.onActivityResult(requestCode, resultCode, data);
         }
