@@ -39,24 +39,11 @@ public class MainActivity extends AppCompatActivity {
 
     public void onClickBtnScan(View v)
     {
-        new IntentIntegrator(this).initiateScan();
+        QRBuilderParser.initiateQRScan(this);
     }
 
-    // Get the results:
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data){
-        IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
-        if (result != null) {
-            String QR_text = result.getContents();
-            QRBuilderParser builderParses = new QRBuilderParser();
-            String SSID = builderParses.parseSSID(QR_text);
-            String Pass = builderParses.parsePass(QR_text);
-            if (!SSID.isEmpty()) {
-                Cache.saveToCache(getApplicationContext(), SSID, Pass);
-                WiFi.connect(getApplicationContext(), SSID, Pass);
-            }
-        } else {
-            super.onActivityResult(requestCode, resultCode, data);
-        }
+        QRBuilderParser.onActivityResult(this, requestCode, resultCode, data);
     }
 }

@@ -3,75 +3,33 @@ package aprivate.wificonnect;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.Button;
-import android.net.wifi.WifiManager;
 import android.net.wifi.WifiConfiguration;
 import android.content.Context;
-import android.app.Activity;
+
 import java.util.List;
 import java.util.ArrayList;
 import android.widget.ListView;
 import android.widget.ArrayAdapter;
 import java.util.HashMap;
 import android.widget.AdapterView;
-import aprivate.wificonnect.QRBuilderParser;
 import android.widget.EditText;
 import android.text.InputType;
 import android.text.method.PasswordTransformationMethod;
 import android.content.DialogInterface;
-import com.google.zxing.BarcodeFormat;
-import com.google.zxing.MultiFormatWriter;
-import com.google.zxing.WriterException;
-import com.google.zxing.common.BitMatrix;
 import android.graphics.Bitmap;
 import android.widget.ImageView;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.view.LayoutInflater;
 import android.widget.TextView;
-import aprivate.wificonnect.Cache;
-import aprivate.wificonnect.WiFi;
 
 public class WiFiListActivity extends AppCompatActivity {
 
-    private String SSID = "";
-    private String Pass = "";
-
-    public final static int WHITE = 0xFFFFFFFF;
-    public final static int BLACK = 0xFF000000;
-    public final static int WIDTH = 800;
-    public final static int HEIGHT = 800;
+    private String m_SSID = "";
+    private String m_PASS = "";
 
     static final String LIST_TITLE = "Known WiFi's";
 
     private String removeFirstAndLastChar(String text) {
         return text.substring(1, text.length() - 1);
-    }
-
-    private Bitmap encodeAsBitmap(String str) throws WriterException {
-        BitMatrix result;
-        try {
-            result = new MultiFormatWriter().encode(str,
-                    BarcodeFormat.QR_CODE, WIDTH, HEIGHT, null);
-        } catch (IllegalArgumentException iae) {
-            // Unsupported format
-            return null;
-        }
-        int w = result.getWidth();
-        int h = result.getHeight();
-        int[] pixels = new int[w * h];
-        for (int y = 0; y < h; y++) {
-            int offset = y * w;
-            for (int x = 0; x < w; x++) {
-                pixels[offset + x] = result.get(x, y) ? BLACK : WHITE;
-            }
-        }
-        Bitmap bitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
-        bitmap.setPixels(pixels, 0, w, 0, 0, w, h);
-        return bitmap;
     }
 
     private class StableArrayAdapter extends ArrayAdapter<String> {
@@ -101,20 +59,22 @@ public class WiFiListActivity extends AppCompatActivity {
 
     private void showQR(Bitmap QR)
     {
-        final AlertDialog.Builder alert = new AlertDialog.Builder(this);
-        final ImageView input = new ImageView(this);
+        if (QR != null) {
+            final AlertDialog.Builder alert = new AlertDialog.Builder(this);
+            final ImageView input = new ImageView(this);
 
-        input.setImageBitmap(QR);
+            input.setImageBitmap(QR);
 
-        alert.setView(input);
-        alert.setTitle("QR Code");
-        alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.cancel();
-            }
-        });
-        alert.show();
+            alert.setView(input);
+            alert.setTitle("QR Code");
+            alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.cancel();
+                }
+            });
+            alert.show();
+        }
     }
 
     private void getPass()
@@ -125,7 +85,7 @@ public class WiFiListActivity extends AppCompatActivity {
         input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
         input.setTransformationMethod(PasswordTransformationMethod.getInstance());
         input.setId(R.id.dialog_edit_text);
-        input.setText(Cache.getPassFromCache(getApplicationContext(), SSID), TextView.BufferType.EDITABLE);
+        input.setText(Cache.getPassFromCache(getApplicationContext(), m_SSID), TextView.BufferType.EDITABLE);
 
         alert.setView(input);
         alert.setTitle("Password Required");
@@ -133,18 +93,11 @@ public class WiFiListActivity extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 EditText edit = (EditText) ((AlertDialog) dialog).findViewById(R.id.dialog_edit_text);
-                Pass = edit.getText().toString();
+                m_PASS = edit.getText().toString();
 
-                Cache.saveToCache(getApplicationContext(), SSID, Pass);
+                Cache.saveToCache(getApplicationContext(), m_SSID, m_PASS);
 
-                QRBuilderParser builderParser = new QRBuilderParser();
-                String QR_string = builderParser.buildQR(SSID, Pass);
-
-                try {
-                    showQR(encodeAsBitmap(QR_string));
-                } catch (WriterException e) {
-                    e.printStackTrace();
-                }
+                showQR(QRBuilderParser.buildQR(m_SSID, m_PASS));
 
                 dialog.cancel();
                 }
@@ -157,7 +110,7 @@ public class WiFiListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.wifi_list);
 
-        List<WifiConfiguration> configs;configs = WiFi.getConfiguredNetworks(getApplicationContext());
+        List<WifiConfiguration> configs = WiFi.getConfiguredNetworks(getApplicationContext());
 
         if (configs != null) {
 
@@ -179,8 +132,8 @@ public class WiFiListActivity extends AppCompatActivity {
                 @Override
                 public void onItemClick(AdapterView<?> parent, final View view,
                                         int position, long id) {
-                    SSID = (String) parent.getItemAtPosition(position);
-                    if (!SSID.equals(LIST_TITLE)) {
+                    m_SSID = (String) parent.getItemAtPosition(position);
+                    if (!m_SSID.equals(LIST_TITLE)) {
                         getPass();
                     }
                 }
