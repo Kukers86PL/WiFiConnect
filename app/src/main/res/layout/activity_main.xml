@@ -42,8 +42,8 @@
 
     <Button
         android:id="@+id/buttonScan"
-        android:layout_width="800px"
-        android:layout_height="200px"
+        android:layout_width="229dp"
+        android:layout_height="57dp"
         android:onClick="onClickBtnScan"
         android:text="Scan QR"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -56,8 +56,8 @@
 
     <Button
         android:id="@+id/buttonGenerate"
-        android:layout_width="800px"
-        android:layout_height="200px"
+        android:layout_width="229dp"
+        android:layout_height="57dp"
         android:onClick="onClickBtnGenerate"
         android:text="Generate QR"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -66,5 +66,16 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintHorizontal_bias="0.435"
         app:layout_constraintVertical_bias="0.095" />
+
+    <com.google.android.gms.ads.AdView
+        xmlns:ads="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/adView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentBottom="true"
+        ads:adSize="SMART_BANNER"
+        ads:adUnitId="ca-app-pub-8210578461491658/3928534476">
+    </com.google.android.gms.ads.AdView>
 
 </android.support.constraint.ConstraintLayout>
