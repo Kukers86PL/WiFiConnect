@@ -26,7 +26,7 @@ public class WiFiListActivity extends AppCompatActivity {
     private String m_SSID = "";
     private String m_PASS = "";
 
-    static final String LIST_TITLE = "Known WiFi's";
+    static final String LIST_TITLE = "Known WiFi's:";
 
     private String removeFirstAndLastChar(String text) {
         return text.substring(1, text.length() - 1);
@@ -110,35 +110,33 @@ public class WiFiListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.wifi_list);
 
+        final ListView listview = (ListView) findViewById(R.id.wifi_list);
+
+        final ArrayList<String> list = new ArrayList<String>();
+        list.add(LIST_TITLE);
+
         List<WifiConfiguration> configs = WiFi.getConfiguredNetworks(getApplicationContext());
 
         if (configs != null) {
-
-            final ListView listview = (ListView) findViewById(R.id.wifi_list);
-            String[] values = new String[]{LIST_TITLE};
-
-            final ArrayList<String> list = new ArrayList<String>();
-            for (int i = 0; i < values.length; ++i) {
-                list.add(values[i]);
-            }
             for (int i = 0; i < configs.size(); i++) {
                 list.add(removeFirstAndLastChar(configs.get(i).SSID));
             }
-            final StableArrayAdapter adapter = new StableArrayAdapter(this,
-                    android.R.layout.simple_list_item_1, list);
-            listview.setAdapter(adapter);
-
-            listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> parent, final View view,
-                                        int position, long id) {
-                    m_SSID = (String) parent.getItemAtPosition(position);
-                    if (!m_SSID.equals(LIST_TITLE)) {
-                        getPass();
-                    }
-                }
-            });
         }
+
+        final StableArrayAdapter adapter = new StableArrayAdapter(this,
+                android.R.layout.simple_list_item_1, list);
+        listview.setAdapter(adapter);
+
+        listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, final View view,
+                                    int position, long id) {
+                m_SSID = (String) parent.getItemAtPosition(position);
+                if (!m_SSID.equals(LIST_TITLE)) {
+                    getPass();
+                }
+            }
+        });
     }
 
 }
