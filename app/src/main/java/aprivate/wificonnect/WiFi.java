@@ -14,11 +14,22 @@ public class WiFi {
 
     static public void connect(Context context, String SSID, String Pass) {
         WifiManager wifi = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
+        wifi.disconnect();
+
+        for (WifiConfiguration configs : wifi.getConfiguredNetworks()) {
+            if (configs.SSID.equals("\"" + SSID + "\"")) {
+                wifi.disableNetwork(configs.networkId);
+                wifi.removeNetwork(configs.networkId);
+                wifi.saveConfiguration();
+                return;
+            }
+        }
+
         WifiConfiguration config = new WifiConfiguration();
         config.SSID = "\"" + SSID + "\"";
         config.preSharedKey = "\"" + Pass + "\"";
         int netId = wifi.addNetwork(config);
-        wifi.disconnect();
+        wifi.saveConfiguration();
         wifi.enableNetwork(netId, true);
         wifi.reconnect();
     }
