@@ -27,6 +27,7 @@ import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.InterstitialAd;
+import android.net.Uri;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -82,6 +83,13 @@ public class MainActivity extends AppCompatActivity {
     public void onClickBtnScan(View v)
     {
         QRBuilderParser.initiateQRScan(this);
+    }
+
+    public void onClickBtnPro(View v)
+    {
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setData(Uri.parse("https://play.google.com/store/apps/details?id=aprivate.wificonnect"));
+        startActivity(intent);
     }
 
     @Override
