@@ -44,25 +44,25 @@ public class MainActivity extends AppCompatActivity {
         mAdView = (AdView) findViewById(R.id.adViewMain);
 
         // Release version
-        //mAdView.loadAd(new AdRequest.Builder().build());
+        mAdView.loadAd(new AdRequest.Builder().build());
 
         // Test version
-        mAdView.loadAd(new AdRequest.Builder()
-                .addTestDevice("3EDAFA2C4F46E267165CB11B3C4D32C0") //Kukers phone
-                .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
-                .build());
+        //mAdView.loadAd(new AdRequest.Builder()
+        //        .addTestDevice("3EDAFA2C4F46E267165CB11B3C4D32C0") //Kukers phone
+        //        .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
+        //        .build());
 
         mInterstitialAd = new InterstitialAd(this);
         mInterstitialAd.setAdUnitId("ca-app-pub-8210578461491658/2179574194");
 
         // Release vversion
-        //mInterstitialAd.loadAd(new AdRequest.Builder().build());
+        mInterstitialAd.loadAd(new AdRequest.Builder().build());
 
         // Test version
-        mInterstitialAd.loadAd(new AdRequest.Builder()
-                .addTestDevice("3EDAFA2C4F46E267165CB11B3C4D32C0") //Kukers phone
-                .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
-                .build());
+        //mInterstitialAd.loadAd(new AdRequest.Builder()
+        //        .addTestDevice("3EDAFA2C4F46E267165CB11B3C4D32C0") //Kukers phone
+        //        .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
+        //        .build());
 
         mInterstitialAd.setAdListener(new AdListener() {
             @Override
