@@ -88,7 +88,7 @@ public class MainActivity extends AppCompatActivity {
     public void onClickBtnPro(View v)
     {
         Intent intent = new Intent(Intent.ACTION_VIEW);
-        intent.setData(Uri.parse("https://play.google.com/store/apps/details?id=aprivate.wificonnect"));
+        intent.setData(Uri.parse("https://play.google.com/store/apps/details?id=aprivate.wificonnectpro"));
         startActivity(intent);
     }
 
