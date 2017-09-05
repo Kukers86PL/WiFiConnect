@@ -145,18 +145,16 @@ public class WiFiListActivity extends AppCompatActivity {
 
         MobileAds.initialize(this, "ca-app-pub-8210578461491658~5644639501");
 
-        mAdView = (AdView) findViewById(R.id.adView);
+        mAdView = (AdView) findViewById(R.id.adViewList);
 
         // Release version
-        //AdRe4quest adRequest = new AdRequest.Builder().build();
+        //mAdView.loadAd(new AdRequest.Builder().build());
 
         // Test version
-        AdRequest adRequest = new AdRequest.Builder()
+        mAdView.loadAd(new AdRequest.Builder()
                 .addTestDevice("3EDAFA2C4F46E267165CB11B3C4D32C0") //Kukers phone
                 .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
-                .build();
-
-        mAdView.loadAd(adRequest);
+                .build());
     }
 
 }

@@ -25,10 +25,13 @@ import aprivate.wificonnect.WiFi;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.InterstitialAd;
 
 public class MainActivity extends AppCompatActivity {
 
     private AdView mAdView;
+    private InterstitialAd mInterstitialAd;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,18 +40,37 @@ public class MainActivity extends AppCompatActivity {
 
         MobileAds.initialize(this, "ca-app-pub-8210578461491658~5644639501");
 
-        mAdView = (AdView) findViewById(R.id.adView);
+        mAdView = (AdView) findViewById(R.id.adViewMain);
 
         // Release version
-        //AdRe4quest adRequest = new AdRequest.Builder().build();
+        // mAdView.loadAd(new AdRequest.Builder().build());
 
         // Test version
-        AdRequest adRequest = new AdRequest.Builder()
+        mAdView.loadAd(new AdRequest.Builder()
                 .addTestDevice("3EDAFA2C4F46E267165CB11B3C4D32C0") //Kukers phone
                 .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
-                .build();
+                .build());
 
-        mAdView.loadAd(adRequest);
+        mInterstitialAd = new InterstitialAd(this);
+        mInterstitialAd.setAdUnitId("ca-app-pub-8210578461491658/2179574194");
+
+        // Release vversion
+        //nterstitialAd.loadAd(new AdRequest.Builder().build());
+
+        // Test version
+        mInterstitialAd.loadAd(new AdRequest.Builder()
+                .addTestDevice("3EDAFA2C4F46E267165CB11B3C4D32C0") //Kukers phone
+                .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
+                .build());
+
+        mInterstitialAd.setAdListener(new AdListener() {
+            @Override
+            public void onAdLoaded() {
+                if (mInterstitialAd.isLoaded()) {
+                    mInterstitialAd.show();
+                }
+            }
+        });
     }
 
     public void onClickBtnGenerate(View v)

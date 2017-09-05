@@ -24,7 +24,7 @@
         android:layout_height="200px"
         android:onClick="onClickBtnScan"
         android:text="Scan WiFi QR"
-        app:layout_constraintBottom_toBottomOf="@+id/adView"
+        app:layout_constraintBottom_toBottomOf="@+id/adViewMain"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="@+id/buttonGenerate"
@@ -33,7 +33,7 @@
 
     <com.google.android.gms.ads.AdView
         xmlns:ads="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/adView"
+        android:id="@+id/adViewMain"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
