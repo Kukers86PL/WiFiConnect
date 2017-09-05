@@ -148,13 +148,13 @@ public class WiFiListActivity extends AppCompatActivity {
         mAdView = (AdView) findViewById(R.id.adViewList);
 
         // Release version
-        //mAdView.loadAd(new AdRequest.Builder().build());
+        mAdView.loadAd(new AdRequest.Builder().build());
 
         // Test version
-        mAdView.loadAd(new AdRequest.Builder()
-                .addTestDevice("3EDAFA2C4F46E267165CB11B3C4D32C0") //Kukers phone
-                .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
-                .build());
+        //mAdView.loadAd(new AdRequest.Builder()
+        //        .addTestDevice("3EDAFA2C4F46E267165CB11B3C4D32C0") //Kukers phone
+        //        .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
+        //        .build());
     }
 
 }
