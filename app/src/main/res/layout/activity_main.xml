@@ -24,37 +24,11 @@
         android:layout_height="200px"
         android:onClick="onClickBtnScan"
         android:text="Scan WiFi QR"
-        app:layout_constraintBottom_toBottomOf="@+id/buttonPro"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="@+id/buttonGenerate"
         android:layout_alignParentLeft="true"
         android:layout_alignParentBottom="true" />
-
-    <Button
-        android:id="@+id/buttonPro"
-        android:layout_width="600px"
-        android:layout_height="200px"
-        android:onClick="onClickBtnPro"
-        android:text="Remove Ads"
-        app:layout_constraintBottom_toBottomOf="@+id/adViewMain"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/buttonScan"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentBottom="true" />
-
-    <com.google.android.gms.ads.AdView
-        xmlns:ads="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/adViewMain"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_alignParentBottom="true"
-        ads:adSize="SMART_BANNER"
-        ads:adUnitId="ca-app-pub-8210578461491658/3928534476"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent" />
 
 </android.support.constraint.ConstraintLayout>

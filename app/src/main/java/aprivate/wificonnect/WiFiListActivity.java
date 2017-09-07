@@ -21,15 +21,10 @@ import android.graphics.Bitmap;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.AdView;
-import com.google.android.gms.ads.MobileAds;
-
 public class WiFiListActivity extends AppCompatActivity {
 
     private String m_SSID = "";
     private String m_PASS = "";
-    private AdView mAdView;
 
     static final String LIST_TITLE = "Known WiFi's:";
 
@@ -142,19 +137,6 @@ public class WiFiListActivity extends AppCompatActivity {
                 }
             }
         });
-
-        MobileAds.initialize(this, "ca-app-pub-8210578461491658~5644639501");
-
-        mAdView = (AdView) findViewById(R.id.adViewList);
-
-        // Release version
-        //mAdView.loadAd(new AdRequest.Builder().build());
-
-        // Test version
-        mAdView.loadAd(new AdRequest.Builder()
-                .addTestDevice("3EDAFA2C4F46E267165CB11B3C4D32C0") //Kukers phone
-                .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
-                .build());
     }
 
 }
